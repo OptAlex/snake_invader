@@ -15,7 +15,14 @@ game_over_screen = False
 batch = pyglet.graphics.Batch()
 
 
-play_button, play_text, restart_button, restart_text, score_text, image_sprite = init_ui_elements(batch)
+(
+    play_button,
+    play_text,
+    restart_button,
+    restart_text,
+    score_text,
+    image_sprite,
+) = init_ui_elements(batch)
 
 
 # Initialize Pyglet window
@@ -28,14 +35,16 @@ super_food = SuperFood(snake)
 lifes = Lifes(snake)
 
 objects = []
-score_label = pyglet.text.Label('Score: 0', font_size=20, x=10, y=WINDOW_HEIGHT-30)
+score_label = pyglet.text.Label("Score: 0", font_size=20, x=10, y=WINDOW_HEIGHT - 30)
 paused = False
+
 
 def update_score_label():
     """
     Updates the score label with the current score.
     """
-    score_label.text = f'Score: {snake.score}'
+    score_label.text = f"Score: {snake.score}"
+
 
 def restart_game():
     global snake, food, super_food, lifes, objects, score_label
@@ -44,7 +53,8 @@ def restart_game():
     super_food = SuperFood(snake)
     lifes = Lifes(snake)
     objects = []
-    score_label.text = 'Score: 0'
+    score_label.text = "Score: 0"
+
 
 @window.event
 def on_key_press(symbol, modifiers):
@@ -60,6 +70,7 @@ def on_key_press(symbol, modifiers):
     elif symbol == pyglet.window.key.P:
         paused = not paused
 
+
 @window.event
 def on_draw():
     window.clear()
@@ -68,7 +79,7 @@ def on_draw():
         play_button.draw()
         play_text.draw()
     elif game_over_screen:
-        score_text.text = f'Score: {snake.score}'
+        score_text.text = f"Score: {snake.score}"
         score_text.draw()
         restart_button.draw()
         restart_text.draw()
@@ -82,16 +93,23 @@ def on_draw():
             obj.draw()
         score_label.draw()
 
+
 @window.event
 def on_mouse_press(x, y, button, modifiers):
     global start_screen, game_over_screen
     if button == mouse.LEFT:
-        if start_screen and play_button.x <= x <= play_button.x + play_button.width \
-                and play_button.y <= y <= play_button.y + play_button.height:
+        if (
+            start_screen
+            and play_button.x <= x <= play_button.x + play_button.width
+            and play_button.y <= y <= play_button.y + play_button.height
+        ):
             # Clicked Play button
             start_screen = False
-        elif game_over_screen and restart_button.x <= x <= restart_button.x + restart_button.width \
-                and restart_button.y <= y <= restart_button.y + restart_button.height:
+        elif (
+            game_over_screen
+            and restart_button.x <= x <= restart_button.x + restart_button.width
+            and restart_button.y <= y <= restart_button.y + restart_button.height
+        ):
             # Clicked Restart button
             game_over_screen = False
             restart_game()

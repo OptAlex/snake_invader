@@ -1,30 +1,31 @@
-# Set up the dimensions of the game window
+# Constants defining game parameters
+
 WINDOW_WIDTH = 400
 WINDOW_HEIGHT = 400
 
-# Set up the dimensions and speed of each segment of the snake_invaders
-SEGMENT_SIZE = 20
-SEGMENT_SPEED = 20
+SEGMENT_SIZE = 20  # The size of each snake segment
+SEGMENT_SPEED = 20  # The speed of the snake
 BULLET_SPEED = 3
 
-# Set up the colors
-
-FOOD_COLOR = (255, 174, 0)
-SUPER_FOOD_COLOR = (128, 0, 128)
-
-# Directions
+# Directions as string constants
+UP = "up"
+DOWN = "down"
+LEFT = "left"
+RIGHT = "right"
 UP_RIGHT = "up_right"
 DOWN_RIGHT = "down_right"
 UP_LEFT = "up_left"
 DOWN_LEFT = "down_left"
 
+# Dictionary mapping directions to rotations in degrees
 ROTATIONS = {
-        "right": -90,
-        "left": 90,
-        "up": 180,
-        "down": 0,
-    }
+    RIGHT: -90,
+    LEFT: 90,
+    UP: 180,
+    DOWN: 0,
+}
 
+# Dictionary mapping curve directions to rotations in degrees
 CURVES = {
     UP_RIGHT: 0,
     DOWN_RIGHT: 270,
@@ -32,9 +33,10 @@ CURVES = {
     DOWN_LEFT: 180,
 }
 
+# Dictionary mapping directions to movement in terms of (x, y) coordinates
 MOVE_DICT = {
-    "up": (0, SEGMENT_SPEED),
-    "down": (0, -SEGMENT_SPEED),
-    "left": (-SEGMENT_SPEED, 0),
-    "right": (SEGMENT_SPEED, 0),
+    UP: (0, SEGMENT_SPEED),
+    DOWN: (0, -SEGMENT_SPEED),
+    LEFT: (-SEGMENT_SPEED, 0),
+    RIGHT: (SEGMENT_SPEED, 0),
 }

@@ -1,5 +1,6 @@
 import pyglet
 
+
 def load_image(image_path):
     """
     Helper function to load and center an image.
