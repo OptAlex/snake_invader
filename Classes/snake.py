@@ -165,7 +165,7 @@ class Snake:
             return False
         head_x, head_y = self.segments[0]
         food_x, food_y = food.position
-        return abs(head_x - food_x) < SEGMENT_SIZE / 2 and abs(head_y - food_y) < SEGMENT_SIZE / 2
+        return abs(head_x - food_x) < SEGMENT_SIZE * 1.5 and abs(head_y - food_y) < SEGMENT_SIZE * 1.5
 
     def collides_with_self(self):
         return self.segments[0] in self.segments[1:]
