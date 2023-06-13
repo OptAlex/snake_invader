@@ -160,7 +160,7 @@ def update(dt):
     if paused or game_over_screen or start_screen:
         return
 
-    snake.move(dt)
+    snake.move()
 
     if snake.collides_with_food(food):
         food.eat()
@@ -214,6 +214,6 @@ def update(dt):
 
 
 
-pyglet.clock.schedule_interval(update, 1 / 60)
+pyglet.clock.schedule_interval(update, 1 / 20)
 
 pyglet.app.run()

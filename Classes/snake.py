@@ -45,7 +45,6 @@ class Snake:
         ]
         self.tail_sprite = pyglet.sprite.Sprite(self.tail_image)
         self.score = 0
-        self.speed = SEGMENT_SIZE/2
 
 
     def get_direction(self, segment1, segment2):
@@ -69,11 +68,11 @@ class Snake:
         if self.lives > 0:
             self.lives -= 1
 
-    def move(self, dt):
+    def move(self):
         x, y = self.segments[0]
         dx, dy = MOVE_DICT[self.direction]
-        x += dx * self.speed * dt
-        y += dy * self.speed * dt
+        x += dx
+        y += dy
         if x < 0:
             x = WINDOW_WIDTH - SEGMENT_SIZE
         elif x >= WINDOW_WIDTH:
