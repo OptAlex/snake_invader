@@ -49,7 +49,12 @@ class Snake:
     def get_direction(self, segment1, segment2):
         x1, y1 = segment1
         x2, y2 = segment2
-        if x1 < x2:
+        if abs(x1 - x2) == WINDOW_WIDTH - SEGMENT_SIZE:  # If segments at opposite edges
+            if x1 < x2:
+                return LEFT
+            else:
+                return RIGHT
+        elif x1 < x2:
             return RIGHT
         elif x1 > x2:
             return LEFT

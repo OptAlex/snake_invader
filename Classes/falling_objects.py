@@ -1,6 +1,5 @@
 from help_functions.const import BULLET_SPEED, WINDOW_WIDTH, WINDOW_HEIGHT, SEGMENT_SIZE
 import pyglet
-from pyglet.sprite import Sprite
 import random
 
 
@@ -62,3 +61,12 @@ class Heart(FallingObject):
 
     def __init__(self):
         super().__init__("pictures/heart.png")
+
+
+class SuperBullet(FallingObject):
+    """
+    Represents a super bullet falling from the top of the screen.
+    """
+
+    def __init__(self):
+        super().__init__("pictures/super_bullet.png")
