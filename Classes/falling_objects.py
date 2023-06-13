@@ -62,6 +62,7 @@ class Heart(FallingObject):
     def __init__(self):
         super().__init__("pictures/heart.png")
 
+
     def move(self):
         """
                 Moves the object down by the size of one segment.
@@ -75,3 +76,4 @@ class SuperBullet(FallingObject):
 
     def __init__(self):
         super().__init__("pictures/super_bullet.png")
+

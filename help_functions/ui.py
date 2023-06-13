@@ -225,3 +225,4 @@ class HighScoreDisplay:
             ].text = (
                 f"High Score {3 - i}: {score}"  # 3 - i to reverse the order of labels
             )
+

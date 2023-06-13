@@ -197,6 +197,7 @@ def update(dt):
         objects.append(Heart())
     if (
         random.random() < 0.0003
+
     ):  # Adjust this value to modify the frequency of super bullets
         objects.append(SuperBullet())
 
