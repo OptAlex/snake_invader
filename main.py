@@ -16,16 +16,26 @@ batch = pyglet.graphics.Batch()
 
 # Initialize UI elements
 (
-    play_button, play_text, restart_button, restart_text, score_label,
-    heart_sprite, heart_info_text, super_bullet_sprite,
-    super_bullet_info_text, bullet_sprite, bullet_info_text, snake_sprite,
-    snake_info_text, image_sprite, food_sprite, food_info_text,
-    super_food_sprite, super_food_info_text,
-    high_score_display
+    play_button,
+    play_text,
+    restart_button,
+    restart_text,
+    score_label,
+    heart_sprite,
+    heart_info_text,
+    super_bullet_sprite,
+    super_bullet_info_text,
+    bullet_sprite,
+    bullet_info_text,
+    snake_sprite,
+    snake_info_text,
+    image_sprite,
+    food_sprite,
+    food_info_text,
+    super_food_sprite,
+    super_food_info_text,
+    high_score_display,
 ) = init_ui_elements(batch)
-
-
-
 
 
 # Initialize Pyglet window
@@ -42,6 +52,7 @@ score_label = pyglet.text.Label("Score: 0", font_size=20, x=10, y=WINDOW_HEIGHT 
 paused = False
 high_score_labels = []
 
+
 def update_score_label():
     """
     Updates the score label with the current score.
@@ -57,7 +68,6 @@ def restart_game():
     lifes = Lifes(snake)
     objects = []
     score_label.text = "Score: 0"
-
 
 
 @window.event
@@ -108,7 +118,9 @@ def on_draw():
         # Shift high scores and draw them
         third_height = WINDOW_HEIGHT // 3
         for i, high_score_label in enumerate(high_score_display.high_score_labels):
-            high_score_label.y = third_height + 70 + i * 30  # Adjust y_shift according to the new positions
+            high_score_label.y = (
+                third_height + 70 + i * 30
+            )  # Adjust y_shift according to the new positions
             high_score_label.draw()
 
     else:
@@ -141,7 +153,6 @@ def on_mouse_press(x, y, button, modifiers):
             # Clicked Restart button
             game_over_screen = False
             restart_game()
-
 
 
 def update(dt):
@@ -179,7 +190,9 @@ def update(dt):
             elif isinstance(obj, Heart):  # If the object is a heart, increase life
                 if snake.lives < 5:
                     snake.lives += 1
-            elif isinstance(obj, SuperBullet):  # If the object is a super bullet, decrease life more
+            elif isinstance(
+                obj, SuperBullet
+            ):  # If the object is a super bullet, decrease life more
                 for _ in range(3):  # Lose life 3 times
                     snake.lose_life()
             objects.remove(obj)
@@ -190,21 +203,22 @@ def update(dt):
         objects.append(Bullet())
     if random.random() < 0.005:  # Adjust this value to modify the frequency of hearts
         objects.append(Heart())
-    if random.random() < 0.003:  # Adjust this value to modify the frequency of super bullets
+    if (
+        random.random() < 0.003
+    ):  # Adjust this value to modify the frequency of super bullets
         objects.append(SuperBullet())
 
     if random.randint(0, 500) == 1:
         super_food.position = super_food.generate_position()
 
     if snake.collides_with_self() or snake.lives <= 0:
-        with open("highscores.txt", 'a') as f:
+        with open("highscores.txt", "a") as f:
             f.write(f"{snake.score}\n")
         high_score_display.update()  # Update high scores
         game_over_screen = True
         return
 
     update_score_label()
-
 
 
 pyglet.clock.schedule_interval(update, 1 / 10)

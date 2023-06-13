@@ -62,6 +62,7 @@ class Heart(FallingObject):
     def __init__(self):
         super().__init__("pictures/heart.png")
 
+
 class SuperBullet(FallingObject):
     """
     Represents a super bullet falling from the top of the screen.
@@ -69,4 +70,3 @@ class SuperBullet(FallingObject):
 
     def __init__(self):
         super().__init__("pictures/super_bullet.png")
-
