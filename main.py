@@ -3,7 +3,7 @@ from pyglet.window import mouse
 
 from Classes.snake import Snake
 from Classes.food import Food, SuperFood
-from Classes.falling_objects import Bullet, Heart  # import Heart class here
+from Classes.falling_objects import Bullet, Heart, SuperBullet
 from Classes.lifes import Lifes
 from help_functions.const import WINDOW_WIDTH, WINDOW_HEIGHT, MOVE_DICT
 
@@ -14,14 +14,27 @@ start_screen = True
 game_over_screen = False
 batch = pyglet.graphics.Batch()
 
-
+# Initialize UI elements
 (
     play_button,
     play_text,
     restart_button,
     restart_text,
-    score_text,
+    score_label,
+    heart_sprite,
+    heart_info_text,
+    super_bullet_sprite,
+    super_bullet_info_text,
+    bullet_sprite,
+    bullet_info_text,
+    snake_sprite,
+    snake_info_text,
     image_sprite,
+    food_sprite,
+    food_info_text,
+    super_food_sprite,
+    super_food_info_text,
+    high_score_display,
 ) = init_ui_elements(batch)
 
 
@@ -37,6 +50,7 @@ lifes = Lifes(snake)
 objects = []
 score_label = pyglet.text.Label("Score: 0", font_size=20, x=10, y=WINDOW_HEIGHT - 30)
 paused = False
+high_score_labels = []
 
 
 def update_score_label():
@@ -47,7 +61,7 @@ def update_score_label():
 
 
 def restart_game():
-    global snake, food, super_food, lifes, objects, score_label
+    global snake, food, super_food, lifes, objects, score_label, high_score_labels
     snake = Snake()
     food = Food(snake)
     super_food = SuperFood(snake)
@@ -74,15 +88,41 @@ def on_key_press(symbol, modifiers):
 @window.event
 def on_draw():
     window.clear()
+    global high_score_labels
+    window.clear()
+    if high_score_labels is None:
+        high_score_labels = []
+
     if start_screen:
         image_sprite.draw()
         play_button.draw()
         play_text.draw()
+        heart_sprite.draw()
+        heart_info_text.draw()
+        super_bullet_sprite.draw()
+        super_bullet_info_text.draw()
+        bullet_sprite.draw()
+        bullet_info_text.draw()
+        snake_sprite.draw()
+        snake_info_text.draw()
+        food_sprite.draw()
+        food_info_text.draw()
+        super_food_sprite.draw()
+        super_food_info_text.draw()
     elif game_over_screen:
-        score_text.text = f"Score: {snake.score}"
-        score_text.draw()
+        score_label.text = f"Score: {snake.score}"
+        score_label.draw()
         restart_button.draw()
         restart_text.draw()
+
+        # Shift high scores and draw them
+        third_height = WINDOW_HEIGHT // 3
+        for i, high_score_label in enumerate(high_score_display.high_score_labels):
+            high_score_label.y = (
+                third_height + 70 + i * 30
+            )  # Adjust y_shift according to the new positions
+            high_score_label.draw()
+
     else:
         # Draw the game
         snake.draw()
@@ -114,33 +154,25 @@ def on_mouse_press(x, y, button, modifiers):
             game_over_screen = False
             restart_game()
 
-
 def update(dt):
-    global objects, paused, game_over_screen, start_screen
+    global objects, paused, game_over_screen, start_screen, high_score_display
 
     if paused or game_over_screen or start_screen:
         return
 
-    snake.move()
+    snake.move(dt)
 
     if snake.collides_with_food(food):
         food.eat()
+        snake.grow(1)  # Now grows by 1 segment
         snake.score += 1
-        dx, dy = MOVE_DICT[snake.direction]
-        last_segment = snake.segments[-1]
-        new_segment = (last_segment[0] - dx, last_segment[1] - dy)
-        snake.segments.append(new_segment)
         if random.random() < 0.1:
             super_food.position = super_food.generate_position()
 
     elif snake.collides_with_food(super_food):
         super_food.eat()
+        snake.grow(5)  # Now grows by 5 segments
         snake.score += 5
-        dx, dy = MOVE_DICT[snake.direction]
-        last_segment = snake.segments[-1]
-        for _ in range(5):
-            new_segment = (last_segment[0] - dx, last_segment[1] - dy)
-            snake.segments.append(new_segment)
 
     for obj in objects[:]:  # Loop over a copy of the list as we'll modify it
         obj.move()
@@ -150,25 +182,38 @@ def update(dt):
             elif isinstance(obj, Heart):  # If the object is a heart, increase life
                 if snake.lives < 5:
                     snake.lives += 1
+            elif isinstance(
+                obj, SuperBullet
+            ):  # If the object is a super bullet, decrease life more
+                for _ in range(3):  # Lose life 3 times
+                    snake.lose_life()
             objects.remove(obj)
 
     objects = [obj for obj in objects if not obj.is_off_screen()]
 
-    if random.random() < 0.02:
+    if random.random() < 0.008:
         objects.append(Bullet())
-    if random.random() < 0.01:  # Adjust this value to modify the frequency of hearts
+    if random.random() < 0.0005:  # Adjust this value to modify the frequency of hearts
         objects.append(Heart())
-
-    if snake.collides_with_self() or snake.lives <= 0:
-        game_over_screen = True
-        return
+    if (
+        random.random() < 0.0003
+    ):  # Adjust this value to modify the frequency of super bullets
+        objects.append(SuperBullet())
 
     if random.randint(0, 500) == 1:
         super_food.position = super_food.generate_position()
 
+    if snake.collides_with_self() or snake.lives <= 0:
+        with open("highscores.txt", "a") as f:
+            f.write(f"{snake.score}\n")
+        high_score_display.update()  # Update high scores
+        game_over_screen = True
+        return
+
     update_score_label()
 
 
-pyglet.clock.schedule_interval(update, 1 / 10)
+
+pyglet.clock.schedule_interval(update, 1 / 60)
 
 pyglet.app.run()

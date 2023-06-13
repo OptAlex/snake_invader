@@ -4,8 +4,8 @@ WINDOW_WIDTH = 600
 WINDOW_HEIGHT = 600
 
 SEGMENT_SIZE = 20  # The size of each snake segment
-SEGMENT_SPEED = 20  # The speed of the snake
-BULLET_SPEED = 3
+SEGMENT_SPEED = SEGMENT_SIZE
+FALLING_OBJ_SPEED = SEGMENT_SIZE/4
 
 # Directions as string constants
 UP = "up"
