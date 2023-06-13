@@ -46,6 +46,7 @@ class Snake:
         self.tail_sprite = pyglet.sprite.Sprite(self.tail_image)
         self.score = 0
 
+
     def get_direction(self, segment1, segment2):
         x1, y1 = segment1
         x2, y2 = segment2
@@ -152,10 +153,19 @@ class Snake:
             )
             middle_sprite.draw()
 
+    def grow(self, segments):
+        dx, dy = MOVE_DICT[self.direction]
+        last_segment = self.segments[-1]
+        for _ in range(segments):
+            new_segment = (last_segment[0] - dx, last_segment[1] - dy)
+            self.segments.append(new_segment)
+
     def collides_with_food(self, food):
         if food.position is None:
             return False
-        return self.segments[0] == food.position
+        head_x, head_y = self.segments[0]
+        food_x, food_y = food.position
+        return abs(head_x - food_x) < SEGMENT_SIZE * 1.5 and abs(head_y - food_y) < SEGMENT_SIZE * 1.5
 
     def collides_with_self(self):
         return self.segments[0] in self.segments[1:]
@@ -176,6 +186,6 @@ class Snake:
         head_x, head_y = self.segments[0]
         obj_x, obj_y = obj.sprite.x, obj.sprite.y
         return (
-            abs(head_x - obj_x) <= SEGMENT_SIZE / 2
-            and abs(head_y - obj_y) <= SEGMENT_SIZE / 2
+            abs(head_x - obj_x) <= SEGMENT_SIZE
+            and abs(head_y - obj_y) <= SEGMENT_SIZE
         )

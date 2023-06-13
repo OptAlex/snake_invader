@@ -154,7 +154,6 @@ def on_mouse_press(x, y, button, modifiers):
             game_over_screen = False
             restart_game()
 
-
 def update(dt):
     global objects, paused, game_over_screen, start_screen, high_score_display
 
@@ -165,22 +164,15 @@ def update(dt):
 
     if snake.collides_with_food(food):
         food.eat()
+        snake.grow(1)  # Now grows by 1 segment
         snake.score += 1
-        dx, dy = MOVE_DICT[snake.direction]
-        last_segment = snake.segments[-1]
-        new_segment = (last_segment[0] - dx, last_segment[1] - dy)
-        snake.segments.append(new_segment)
         if random.random() < 0.1:
             super_food.position = super_food.generate_position()
 
     elif snake.collides_with_food(super_food):
         super_food.eat()
+        snake.grow(5)  # Now grows by 5 segments
         snake.score += 5
-        dx, dy = MOVE_DICT[snake.direction]
-        last_segment = snake.segments[-1]
-        for _ in range(5):
-            new_segment = (last_segment[0] - dx, last_segment[1] - dy)
-            snake.segments.append(new_segment)
 
     for obj in objects[:]:  # Loop over a copy of the list as we'll modify it
         obj.move()
@@ -199,12 +191,13 @@ def update(dt):
 
     objects = [obj for obj in objects if not obj.is_off_screen()]
 
-    if random.random() < 0.08:
+    if random.random() < 0.008:
         objects.append(Bullet())
-    if random.random() < 0.005:  # Adjust this value to modify the frequency of hearts
+    if random.random() < 0.0005:  # Adjust this value to modify the frequency of hearts
         objects.append(Heart())
     if (
-        random.random() < 0.003
+        random.random() < 0.0003
+
     ):  # Adjust this value to modify the frequency of super bullets
         objects.append(SuperBullet())
 
@@ -221,6 +214,7 @@ def update(dt):
     update_score_label()
 
 
-pyglet.clock.schedule_interval(update, 1 / 10)
+
+pyglet.clock.schedule_interval(update, 1 / 20)
 
 pyglet.app.run()
