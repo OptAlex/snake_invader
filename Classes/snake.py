@@ -39,13 +39,9 @@ class Snake:
         self.tail_image = load_image("pictures/snake_tail.png")
         self.middle_right_up_image = load_image("pictures/snake_up_right.png")
         self.head_sprite = pyglet.sprite.Sprite(self.head_image)
-        self.middle_sprites = [
-            pyglet.sprite.Sprite(self.middle_image)
-            for _ in range(len(self.segments) - 2)
-        ]
-        self.tail_sprite = pyglet.sprite.Sprite(self.tail_image)
         self.score = 0
-        self.move_counter = 0  # Counter for frame updates
+        self.move_counter = 0
+        self.growth_due = 0
 
     def move(self):
         self.move_counter += 1
@@ -66,8 +62,10 @@ class Snake:
         elif y >= WINDOW_HEIGHT:
             y = 0
         self.segments.insert(0, (x, y))
-        self.segments.pop()
-
+        if self.growth_due > 0:  # Check if the snake is due to grow
+            self.growth_due -= 1  # If so, decrement growth_due
+        else:
+            self.segments.pop()  # If not, remove the last segment
 
     def get_direction(self, segment1, segment2):
         x1, y1 = segment1
@@ -143,7 +141,7 @@ class Snake:
             segment = self.segments[i]
             curve = self.get_curve(i)
             if curve:
-                middle_image = load_image("pictures/snake_up_right.png")
+                middle_image = self.middle_right_up_image
                 rotation = CURVES.get(curve, None)
             else:
                 middle_image = self.middle_image
@@ -160,6 +158,7 @@ class Snake:
             middle_sprite.draw()
 
     def grow(self, segments):
+        self.growth_due += segments
         dx, dy = MOVE_DICT[self.direction]
         last_segment = self.segments[-1]
         for _ in range(segments):
@@ -174,7 +173,7 @@ class Snake:
         return abs(head_x - food_x) < SEGMENT_SIZE * 1.5 and abs(head_y - food_y) < SEGMENT_SIZE * 1.5
 
     def collides_with_self(self):
-        return self.segments[0] in self.segments[1:]
+        return self.segments[0] in self.segments[1:-1]
 
     def collides_with_wall(self):
         x, y = self.segments[0]

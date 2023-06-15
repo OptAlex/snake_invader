@@ -1,6 +1,6 @@
 # Constants defining game parameters
 
-WINDOW_WIDTH = 600
+WINDOW_WIDTH = 400
 WINDOW_HEIGHT = 600
 
 SEGMENT_SIZE = 20  # The size of each snake segment
