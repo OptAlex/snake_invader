@@ -49,7 +49,7 @@ class Snake:
         If the snake is not due to grow, the last segment is removed after moving.
         """
         self.move_counter += 1
-        if self.move_counter < 5:  # Only move the snake once every 5 frames
+        if self.move_counter < 4:  # Only move the snake once every 4 frames
             return
         self.move_counter = 0
 
