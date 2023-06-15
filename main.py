@@ -53,7 +53,6 @@ super_food = SuperFood(snake)
 lifes = Lifes(snake)
 
 objects = []
-score_label = pyglet.text.Label("Score: 0", font_size=20, x=10, y=WINDOW_HEIGHT - 30)
 paused = False
 high_score_labels = []
 
@@ -130,6 +129,7 @@ def on_draw():
 
     else:
         # Draw the game
+        score_label = pyglet.text.Label("Score: 0", font_size=20, x=10, y=WINDOW_HEIGHT - 30)
         snake.draw()
         food.draw()
         super_food.draw()
