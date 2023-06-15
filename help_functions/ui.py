@@ -5,6 +5,18 @@ from help_functions.image import load_image
 
 
 def compute_and_center_sprite_text(image, info_text, y_pos, padding):
+    """
+    Calculates the position to center an image and a text horizontally on the screen.
+
+    Args:
+        image (Image): Pyglet Image to center.
+        info_text (Label): Pyglet Label to center next to the image.
+        y_pos (int): The vertical position where the image and the text should be placed.
+        padding (int): The space between the image and the text.
+
+    Returns:
+        tuple: A tuple with the image as a sprite and the text label.
+    """
     combined_width = image.width + padding + info_text.content_width
     start_pos = (WINDOW_WIDTH - combined_width) // 2
     sprite = pyglet.sprite.Sprite(image, x=start_pos, y=y_pos)
@@ -13,12 +25,19 @@ def compute_and_center_sprite_text(image, info_text, y_pos, padding):
 
 
 def init_ui_elements(batch):
+    """
+    Initializes all the UI elements needed for the game's start and game over screens.
+
+    Args:
+        batch (Batch): Pyglet batch to group all the UI elements.
+
+    Returns:
+        tuple: A tuple containing all UI elements.
+    """
     third_height = WINDOW_HEIGHT // 3
     padding = 10
 
-    shift_up = (
-        45  # change this value to adjust the vertical shift for the existing elements
-    )
+    shift_up = 45
 
     high_score_display = HighScoreDisplay(batch)
 
@@ -60,18 +79,6 @@ def init_ui_elements(batch):
         batch=batch,
     )
 
-    score_text = text.Label(
-        "",
-        font_name="Verdana",
-        font_size=20,
-        x=WINDOW_WIDTH // 2,
-        y=third_height + 250 + shift_up,
-        anchor_x="center",
-        anchor_y="center",
-        batch=batch,
-    )
-
-    # Added Images and Texts
     food_info_text = text.Label(
         "gain +1.",
         font_name="Verdana",
@@ -100,7 +107,6 @@ def init_ui_elements(batch):
         super_food_image, super_food_info_text, third_height - 15 + shift_up, padding
     )
 
-    # Original Images and Texts now shifted downwards
     heart_info_text = text.Label(
         "increase your lives by one.",
         font_name="Verdana",
@@ -170,7 +176,6 @@ def init_ui_elements(batch):
         play_text,
         restart_button,
         restart_text,
-        score_text,
         heart_sprite,
         heart_info_text,
         super_bullet_sprite,
@@ -189,7 +194,18 @@ def init_ui_elements(batch):
 
 
 class HighScoreDisplay:
+    """
+    Class for handling the display of high scores in the game.
+    """
+
     def __init__(self, batch=None, y_shift=0):
+        """
+        Initializer for HighScoreDisplay. Creates text labels for high scores.
+
+        Args:
+            batch (Batch, optional): Pyglet batch to group all the UI elements.
+            y_shift (int, optional): Vertical shift for high score labels.
+        """
         self.high_score_labels = [
             pyglet.text.Label(
                 "",
@@ -206,6 +222,12 @@ class HighScoreDisplay:
         self.update()
 
     def get_high_scores(self):
+        """
+        Reads the high scores from a file and returns the top 3.
+
+        Returns:
+            list: The top 3 high scores.
+        """
         try:
             with open("highscores.txt", "r") as f:
                 scores = f.read().split("\n")
@@ -216,6 +238,9 @@ class HighScoreDisplay:
             return []
 
     def update(self):
+        """
+        Updates the high score labels with the current high scores.
+        """
         high_scores = self.get_high_scores()
         for i, score in enumerate(
             high_scores[::-1]
@@ -225,4 +250,3 @@ class HighScoreDisplay:
             ].text = (
                 f"High Score {3 - i}: {score}"  # 3 - i to reverse the order of labels
             )
-

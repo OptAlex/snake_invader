@@ -25,7 +25,6 @@ super_bullet_gen_base_chance = 0.00025
     play_text,
     restart_button,
     restart_text,
-    score_label,
     heart_sprite,
     heart_info_text,
     super_bullet_sprite,
@@ -41,7 +40,7 @@ super_bullet_gen_base_chance = 0.00025
     super_food_info_text,
     high_score_display,
 ) = init_ui_elements(batch)
-
+score_label = pyglet.text.Label("Score: 0", font_size=20, x=10, y=WINDOW_HEIGHT - 30)
 
 # Initialize Pyglet window
 window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT)
@@ -65,6 +64,9 @@ def update_score_label():
 
 
 def restart_game():
+    """
+    Resets all the game variables to their initial states.
+    """
     global snake, food, super_food, lifes, objects, score_label, high_score_labels
     snake = Snake()
     food = Food(snake)
@@ -76,6 +78,14 @@ def restart_game():
 
 @window.event
 def on_key_press(symbol, modifiers):
+    """
+    Handles key press events. Changes snake direction or pauses the game
+    based on the key pressed.
+
+    Args:
+        symbol: The key symbol pressed.
+        modifiers: State of the modifier keys.
+    """
     global paused
     if symbol == pyglet.window.key.UP:
         snake.change_direction("up")
@@ -91,9 +101,12 @@ def on_key_press(symbol, modifiers):
 
 @window.event
 def on_draw():
+    """
+    Draws all game and UI elements based on the game state (start screen, game over screen, or in-game).
+    """
     window.clear()
     global high_score_labels
-    window.clear()
+
     if high_score_labels is None:
         high_score_labels = []
 
@@ -122,14 +135,11 @@ def on_draw():
         # Shift high scores and draw them
         third_height = WINDOW_HEIGHT // 3
         for i, high_score_label in enumerate(high_score_display.high_score_labels):
-            high_score_label.y = (
-                third_height + 70 + i * 30
-            )
+            high_score_label.y = third_height + 70 + i * 30
             high_score_label.draw()
 
     else:
         # Draw the game
-        score_label = pyglet.text.Label("Score: 0", font_size=20, x=10, y=WINDOW_HEIGHT - 30)
         snake.draw()
         food.draw()
         super_food.draw()
@@ -141,6 +151,14 @@ def on_draw():
 
 @window.event
 def on_mouse_press(x, y, button, modifiers):
+    """
+    Handles mouse press events. Starts or restarts the game based on the button pressed.
+
+    Args:
+        x, y: The mouse position.
+        button: The button pressed.
+        modifiers: State of the modifier keys.
+    """
     global start_screen, game_over_screen
     if button == mouse.LEFT:
         if (
@@ -159,7 +177,14 @@ def on_mouse_press(x, y, button, modifiers):
             game_over_screen = False
             restart_game()
 
+
 def update(dt):
+    """
+    Handles game updates. Moves the snake, checks for collision events, generates falling objects, and handles game over.
+
+    Args:
+        dt: The time delta since the last update.
+    """
     global objects, paused, game_over_screen, start_screen, high_score_display
 
     if paused or game_over_screen or start_screen:
@@ -187,9 +212,7 @@ def update(dt):
             elif isinstance(obj, Heart):  # If the object is a heart, increase life
                 if snake.lives < 5:
                     snake.lives += 1
-            elif isinstance(
-                obj, SuperBullet
-            ):
+            elif isinstance(obj, SuperBullet):
                 for _ in range(3):  # Lose life 3 times
                     snake.lose_life()
             objects.remove(obj)
@@ -222,6 +245,7 @@ def update(dt):
         return
 
     update_score_label()
+
 
 pyglet.clock.schedule_interval(update, 1 / 90)
 
