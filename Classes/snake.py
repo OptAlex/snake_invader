@@ -45,7 +45,7 @@ class Snake:
 
     def move(self):
         """
-        Moves the snake in the current direction. The snake moves once every 5 frames, and can wrap around the screen.
+        Moves the snake in the current direction. The snake moves once every 4 frames, and can wrap around the screen.
         If the snake is not due to grow, the last segment is removed after moving.
         """
         self.move_counter += 1
