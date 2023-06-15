@@ -191,12 +191,12 @@ def update(dt):
 
     objects = [obj for obj in objects if not obj.is_off_screen()]
 
-    if random.random() < 0.008:
+    if random.random() < 0.004:
         objects.append(Bullet())
-    if random.random() < 0.0005:  # Adjust this value to modify the frequency of hearts
+    if random.random() < 0.00025:  # Adjust this value to modify the frequency of hearts
         objects.append(Heart())
     if (
-        random.random() < 0.0003
+        random.random() < 0.00025
 
     ):  # Adjust this value to modify the frequency of super bullets
         objects.append(SuperBullet())
@@ -213,8 +213,6 @@ def update(dt):
 
     update_score_label()
 
-
-
-pyglet.clock.schedule_interval(update, 1 / 20)
+pyglet.clock.schedule_interval(update, 1 / 90)
 
 pyglet.app.run()

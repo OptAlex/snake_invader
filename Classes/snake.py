@@ -45,6 +45,28 @@ class Snake:
         ]
         self.tail_sprite = pyglet.sprite.Sprite(self.tail_image)
         self.score = 0
+        self.move_counter = 0  # Counter for frame updates
+
+    def move(self):
+        self.move_counter += 1
+        if self.move_counter < 5:  # Only move the snake once every 5 frames
+            return
+        self.move_counter = 0
+
+        x, y = self.segments[0]
+        dx, dy = MOVE_DICT[self.direction]
+        x += dx
+        y += dy
+        if x < 0:
+            x = WINDOW_WIDTH - SEGMENT_SIZE
+        elif x >= WINDOW_WIDTH:
+            x = 0
+        if y < 0:
+            y = WINDOW_HEIGHT - SEGMENT_SIZE
+        elif y >= WINDOW_HEIGHT:
+            y = 0
+        self.segments.insert(0, (x, y))
+        self.segments.pop()
 
 
     def get_direction(self, segment1, segment2):
@@ -67,22 +89,6 @@ class Snake:
     def lose_life(self):
         if self.lives > 0:
             self.lives -= 1
-
-    def move(self):
-        x, y = self.segments[0]
-        dx, dy = MOVE_DICT[self.direction]
-        x += dx
-        y += dy
-        if x < 0:
-            x = WINDOW_WIDTH - SEGMENT_SIZE
-        elif x >= WINDOW_WIDTH:
-            x = 0
-        if y < 0:
-            y = WINDOW_HEIGHT - SEGMENT_SIZE
-        elif y >= WINDOW_HEIGHT:
-            y = 0
-        self.segments.insert(0, (x, y))
-        self.segments.pop()
 
     def change_direction(self, new_direction):
         if new_direction in [UP, DOWN, LEFT, RIGHT]:
