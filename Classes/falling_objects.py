@@ -1,4 +1,9 @@
-from help_functions.const import FALLING_OBJ_SPEED, WINDOW_WIDTH, WINDOW_HEIGHT, SEGMENT_SIZE
+from help_functions.const import (
+    FALLING_OBJ_SPEED,
+    WINDOW_WIDTH,
+    WINDOW_HEIGHT,
+    SEGMENT_SIZE,
+)
 import pyglet
 import random
 
@@ -62,12 +67,12 @@ class Heart(FallingObject):
     def __init__(self):
         super().__init__("pictures/heart.png")
 
-
     def move(self):
         """
-                Moves the object down by the size of one segment.
-                """
-        self.sprite.y -= 0.5*FALLING_OBJ_SPEED
+        Moves the object down by the size of one segment.
+        """
+        self.sprite.y -= 0.5 * FALLING_OBJ_SPEED
+
 
 class SuperBullet(FallingObject):
     """
@@ -76,4 +81,3 @@ class SuperBullet(FallingObject):
 
     def __init__(self):
         super().__init__("pictures/super_bullet.png")
-
